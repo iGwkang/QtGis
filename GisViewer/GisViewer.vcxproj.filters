@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="GisLayer">
+      <UniqueIdentifier>{f85a733f-d9ed-4975-80ea-cea614064f4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{bc6fa4fe-070e-4737-9bfc-0d99adb01394}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GisViewer">
+      <UniqueIdentifier>{507896c6-65c9-47ad-80ab-cbf45ee55079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GisLayer\DrawLayer">
+      <UniqueIdentifier>{a530fc30-ce50-4753-b2fa-916ec208278c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GisLayer\EntityLayer">
+      <UniqueIdentifier>{4aa0bc3b-8cbe-4cfe-8111-ac1ea2963bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GisLayer\RouteLayer">
+      <UniqueIdentifier>{f2974032-c4f5-4aa2-b77f-b010d83225fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataManager">
+      <UniqueIdentifier>{6dfc404b-868a-469e-9ec5-ac9b613000d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GisLayer\TileLayer">
+      <UniqueIdentifier>{64a905b0-cd94-4302-ae94-f08815c7b0c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GisLayer\TileLayer\load_mbtiles">
+      <UniqueIdentifier>{85c54d44-3190-42e0-bcfa-2d2f1b82bf03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeoMath">
+      <UniqueIdentifier>{3e2f164f-95b8-4ba2-9a44-b9d3e2c53aaa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DrawItemLayer.cpp">
+      <Filter>GisLayer\DrawLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TestDistance.cpp">
+      <Filter>GisLayer\DrawLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="RouteAreaLayer.cpp">
+      <Filter>GisLayer\RouteLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadGisConfig.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadTileThread.cpp">
+      <Filter>GisLayer\TileLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MapItem.cpp">
+      <Filter>GisLayer\TileLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TileItem.cpp">
+      <Filter>GisLayer\TileLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadTileFromMbtiles.cpp">
+      <Filter>GisLayer\TileLayer\load_mbtiles</Filter>
+    </ClCompile>
+    <ClCompile Include="GisViewer.cpp">
+      <Filter>GisViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="GisLayerItem.cpp">
+      <Filter>GisLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseLonLatItem.cpp">
+      <Filter>GisViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="GisStatus.cpp">
+      <Filter>GisLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="RouteItem.cpp">
+      <Filter>GisLayer\RouteLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="RouteNodeItem.cpp">
+      <Filter>GisLayer\RouteLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityLayer.cpp">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityItem.cpp">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="DealEntityMsgThread.cpp">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="GeoMath.cpp">
+      <Filter>GeoMath</Filter>
+    </ClCompile>
+    <ClCompile Include="TileSystem.cpp">
+      <Filter>GeoMath</Filter>
+    </ClCompile>
+    <ClCompile Include="GeoToQtMath.cpp">
+      <Filter>GeoMath</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="MouseLonLatItem.h">
+      <Filter>GisViewer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TestDistance.h">
+      <Filter>GisLayer\DrawLayer</Filter>
+    </CustomBuild>
+    <QtMoc Include="DealEntityMsgThread.h">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </QtMoc>
+    <QtMoc Include="GisSignals.h">
+      <Filter>GisViewer</Filter>
+    </QtMoc>
+    <CustomBuild Include="DrawItemLayer.h">
+      <Filter>GisLayer\DrawLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EntityItem.h">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </CustomBuild>
+    <QtMoc Include="EntityLayer.h">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </QtMoc>
+    <CustomBuild Include="RouteAreaLayer.h">
+      <Filter>GisLayer\RouteLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="RouteNodeItem.h">
+      <Filter>GisLayer\RouteLayer</Filter>
+    </CustomBuild>
+    <QtMoc Include="LoadTileThread.h">
+      <Filter>GisLayer\TileLayer</Filter>
+    </QtMoc>
+    <QtMoc Include="MapItem.h">
+      <Filter>GisLayer\TileLayer</Filter>
+    </QtMoc>
+    <QtMoc Include="GisViewer.h">
+      <Filter>GisViewer</Filter>
+    </QtMoc>
+    <CustomBuild Include="GisLayerItem.h">
+      <Filter>GisLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GisStatus.h">
+      <Filter>GisLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GisEntity.h">
+      <Filter>GisLayer\EntityLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="RouteItem.h">
+      <Filter>GisLayer\RouteLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TileItem.h">
+      <Filter>GisLayer\TileLayer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LoadTileFromMbtiles.h">
+      <Filter>GisLayer\TileLayer\load_mbtiles</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ReadGisConfig.h">
+      <Filter>Config</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AbilityCircleDataManager.hpp">
+      <Filter>DataManager</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DataManager.hpp">
+      <Filter>DataManager</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeoToQtMath.h">
+      <Filter>GeoMath</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Quat.h">
+      <Filter>GeoMath</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TileSystem.h">
+      <Filter>GeoMath</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeoMath.h">
+      <Filter>GeoMath</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Vec3d.h">
+      <Filter>GeoMath</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
