@@ -285,15 +285,10 @@ bool LoadTileThread::getLevelTile(int & tileX, int & tileY, int & gisLevel, std:
 		QEventLoop eventLoop;
 		QNetworkReply *reply = httpMgr->get(requestInfo);
 		connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
-		eventLoop.exec();       //block until finish
-		//错误处理
-		if (reply->error() != QNetworkReply::NoError)
-		{
-			return false;
-		}
-		//请求返回的结果
-		QByteArray responseByte = reply->readAll();
+		eventLoop.exec();
 
+		QByteArray responseByte = reply->readAll();
+		auto error = reply->error();
 		delete reply;
 		delete httpMgr;
 
