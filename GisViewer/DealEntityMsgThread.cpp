@@ -412,7 +412,9 @@ void setAttrOpacityValue(QDomElement &ele, const QString &targetName, const QStr
 	{
 		if (ele.childNodes().at(i).isElement())
 		{
-			setAttrOpacityValue(ele.childNodes().at(i).toElement(), targetName, attrValue);
+			QDomNode child = ele.childNodes().at(i);
+			QDomElement element = child.toElement();
+			setAttrOpacityValue(element, targetName, attrValue);
 		}
 	}
 }
@@ -428,7 +430,9 @@ void setAttrValue(QDomElement &ele, const QString &targetName, const QString &at
 	{
 		if (ele.childNodes().at(i).isElement())
 		{
-			setAttrValue(ele.childNodes().at(i).toElement(), targetName, attr, attrValue);
+			QDomNode child = ele.childNodes().at(i);
+			QDomElement element = child.toElement();
+			setAttrValue(element, targetName, attr, attrValue);
 		}
 	}
 }
