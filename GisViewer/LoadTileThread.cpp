@@ -2,21 +2,29 @@
 #include "TileSystem.h"
 #include "ReadGisConfig.h"
 #include "LoadTileFromMbtiles.h"
-#include <QPainter>
 #include <iostream>
 #include <unordered_set>
 
+#include <QPainter>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QEventLoop>
+
 LoadTileThread::LoadTileThread()
-	: isRun(true), mTilePath(ReadGisConfig::instance().getTilePath()), currentGisLevel(ReadGisConfig::instance().getInitLevel())
+	: isRun(true), mTilePath(ReadGisConfig::instance().getTilePath().c_str()), currentGisLevel(ReadGisConfig::instance().getInitLevel())
 {
-	if (mTilePath.find(".mbtiles") != std::string::npos)
+	if (mTilePath.endsWith(".mbtiles", Qt::CaseInsensitive))
 	{
 		tileType = LoadTileThread::MBTILES;
-		LoadTileFromMbtiles::instance().setTileFilePath(mTilePath);
+		LoadTileFromMbtiles::instance().setTileFilePath(mTilePath.toStdString());
+	}
+	else if (mTilePath.startsWith("http", Qt::CaseInsensitive))
+	{
+		tileType = LoadTileThread::NETWORK;
 	}
 	else
 	{
-		tileType = LoadTileThread::JPEG;
+		tileType = LoadTileThread::IMAGE;
 	}
 }
 
@@ -111,8 +119,20 @@ void LoadTileThread::loadTile(const QPoint &topLeftTile, const QPoint &bottomRig
 	int minTileX = std::max(0, topLeftTile.x());
 	int maxTileX = std::min(tileNum - 1, bottomRightTile.x());
 
-	int minTileY = tileNum - 1 - std::min(tileNum - 1, bottomRightTile.y());
-	int maxTileY = tileNum - 1 - std::max(0, topLeftTile.y());
+	static const int yOrtginal = ReadGisConfig::instance().getTileYOriginal();
+
+	int minTileY, maxTileY;
+	if (yOrtginal == 2)
+	{
+		minTileY = tileNum - 1 - std::min(tileNum - 1, bottomRightTile.y());
+		maxTileY = tileNum - 1 - std::max(0, topLeftTile.y());
+	}
+	else
+	{
+		minTileY = std::max(0, topLeftTile.y());
+		maxTileY = std::min(tileNum - 1, bottomRightTile.y());
+	}
+
 
 	//  ----> x
 	// y
@@ -195,7 +215,7 @@ bool LoadTileThread::getLevelTile(int & tileX, int & tileY, int & gisLevel, std:
 	int minL = ReadGisConfig::instance().getGisMinLevel();
 	if (gisLevel < minL)
 		return false;
-	if (LoadTileThread::JPEG == tileType)
+	if (LoadTileThread::IMAGE == tileType)
 	{
 		key = TileSystem::TileXYToQuadKey(tileX, tileY, gisLevel);
 
@@ -206,25 +226,24 @@ bool LoadTileThread::getLevelTile(int & tileX, int & tileY, int & gisLevel, std:
 			outImage = _find->second;
 			return true;
 		}
-		else //从文件中加载
+		 //从文件中加载
+
+		//瓦片路径
+		QString tilePath = mTilePath + QString("/%1/%2/%3.%4").arg(gisLevel).arg(tileX).arg(tileY).arg(ReadGisConfig::instance().getTileFormat().c_str());
+
+		QImage image;
+		if (image.load(tilePath))
 		{
-			//瓦片路径
-			QString tilePath = mTilePath.c_str() + QString("%1/%2/%3.jpg").arg(gisLevel).arg(tileX).arg(tileY);
+			image = image.scaled(256, 256);
+			outImage = image;
+			loadedImage[key] = image;
 
-			QImage image;
-			if (image.load(tilePath))
-			{
-				image = image.scaled(256, 256);
-				outImage = image;
-				loadedImage[key] = image;
-
-				return true;
-			}
+			return true;
 		}
 
 		return getLevelTile(tileX /= 2, tileY /= 2, --gisLevel, key, outImage);
 	}
-	else if (LoadTileThread::MBTILES == tileType)
+	if (LoadTileThread::MBTILES == tileType)
 	{
 		if (LoadTileFromMbtiles::instance().getTile(gisLevel, tileX, tileY, outImage))
 		{
@@ -238,6 +257,57 @@ bool LoadTileThread::getLevelTile(int & tileX, int & tileY, int & gisLevel, std:
 		{
 			return getLevelTile(tileX /= 2, tileY /= 2, --gisLevel, key, outImage);
 		}
+	}
+	if (LoadTileThread::NETWORK == tileType)
+	{
+		key = TileSystem::TileXYToQuadKey(tileX, tileY, gisLevel);
+
+		//判断是否已经加载
+		auto _find = loadedImage.find(key);
+		if (_find != loadedImage.end())
+		{
+			outImage = _find->second;
+			return true;
+		}
+
+		//瓦片路径
+		// QString tilePath = mTilePath.c_str() + QString("/%1/%2/%3.%4").arg(gisLevel).arg(tileX).arg(tileY).arg(ReadGisConfig::instance().getTileFormat().c_str());
+		QString tileUrl = mTilePath;
+		tileUrl.replace("{x}", QString::number(tileX));
+		tileUrl.replace("{y}", QString::number(tileY));
+		tileUrl.replace("{z}", QString::number(gisLevel));
+
+		QNetworkAccessManager *httpMgr = new QNetworkAccessManager();
+		QNetworkRequest requestInfo;
+		requestInfo.setUrl(QUrl(tileUrl));
+
+		//添加事件循环机制，返回后再运行后面的
+		QEventLoop eventLoop;
+		QNetworkReply *reply = httpMgr->get(requestInfo);
+		connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
+		eventLoop.exec();       //block until finish
+		//错误处理
+		if (reply->error() != QNetworkReply::NoError)
+		{
+			return false;
+		}
+		//请求返回的结果
+		QByteArray responseByte = reply->readAll();
+
+		delete reply;
+		delete httpMgr;
+
+		QImage image;
+		if (image.loadFromData(responseByte))
+		{
+			image = image.scaled(256, 256);
+			outImage = image;
+			loadedImage[key] = image;
+
+			return true;
+		}
+
+		return getLevelTile(tileX /= 2, tileY /= 2, --gisLevel, key, outImage);
 	}
 	else
 	{

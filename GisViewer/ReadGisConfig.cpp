@@ -5,7 +5,7 @@ struct GisConfigData
 {
 	GisConfigData()
 		: maxLevel(22), minLevel(3), initLevel(5),
-		initLongitude(0.0), initLatitude(0.0)
+		initLongitude(0.0), initLatitude(0.0), tileYOriginal(1)
 	{
 
 	}
@@ -21,6 +21,12 @@ struct GisConfigData
 
 	//地图最小等级
 	unsigned minLevel;
+
+	// 瓦片图片格式
+	std::string tileFormat;
+
+	// Y轴方向，1 从上往下，2 从下网上
+	int tileYOriginal;
 
 	/*** 地图初始化 ***/
 	//初始化等级
@@ -70,6 +76,10 @@ void ReadGisConfig::readConfig(const std::string &confPath)
 	if (mPtr->maxLevel < 0)
 		mPtr->maxLevel = 0;
 
+	mPtr->tileFormat = settings.value("GisConfig/TileFormat", 0).toString().toStdString();
+
+	mPtr->tileYOriginal = settings.value("GisConfig/TileYOriginal", 0).toInt();
+
 	//地图初始化等级
 	mPtr->initLevel = settings.value("GisConfig/InitLevel", 5).toUInt();
 
@@ -96,6 +106,16 @@ unsigned ReadGisConfig::getGisMinLevel()
 		return 3;
 
 	return mPtr->minLevel;
+}
+
+const std::string & ReadGisConfig::getTileFormat() const
+{
+	return mPtr->tileFormat;
+}
+
+int ReadGisConfig::getTileYOriginal() const
+{
+	return mPtr->tileYOriginal;
 }
 
 //获取瓦片路径

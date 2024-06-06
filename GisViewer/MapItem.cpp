@@ -226,6 +226,8 @@ void MapItem::puzzle()
 	btRight.rx() = std::min(boundingRect().width(), btRight.x());
 	btRight.ry() = std::min(boundingRect().width(), btRight.y());
 
+	static const int yOrtginal = ReadGisConfig::instance().getTileYOriginal();
+
 	QPoint topLeftTile, bottomRightTile;
 	//像素坐标转瓦片坐标
 	TileSystem::PixelXYToTileXY(tpLeft.x(), tpLeft.y(), topLeftTile.rx(), topLeftTile.ry());
@@ -236,8 +238,17 @@ void MapItem::puzzle()
 	int minTileX = std::max(0, topLeftTile.x());
 	int maxTileX = std::min(tileNum - 1, bottomRightTile.x());
 
-	int minTileY = tileNum - 1 - std::min(tileNum - 1, bottomRightTile.y());
-	int maxTileY = tileNum - 1 - std::max(0, topLeftTile.y());
+	int minTileY, maxTileY;
+	if (yOrtginal == 2)
+	{
+		minTileY = tileNum - 1 - std::min(tileNum - 1, bottomRightTile.y());
+		maxTileY = tileNum - 1 - std::max(0, topLeftTile.y());
+	}
+	else
+	{
+		minTileY = std::max(0, topLeftTile.y());
+		maxTileY = std::min(tileNum - 1, bottomRightTile.y());
+	}
 
 	//视口上的瓦片
 	for (int tileX = minTileX; tileX <= maxTileX; ++tileX)
@@ -252,7 +263,14 @@ void MapItem::puzzle()
 			{
 				auto item = _find->second;
 				QPoint pos;
-				TileSystem::TileXYToPixelXY(tileX, tileNum - 1 - tileY, pos.rx(), pos.ry());
+				if (yOrtginal == 2)
+				{
+					TileSystem::TileXYToPixelXY(tileX, tileNum - 1 - tileY, pos.rx(), pos.ry());
+				}
+				else if (yOrtginal == 1)
+				{
+					TileSystem::TileXYToPixelXY(tileX, tileY, pos.rx(), pos.ry());
+				}
 
 				item->setPos(pos);
 				item->setScale(1);
@@ -267,7 +285,14 @@ void MapItem::puzzle()
 				if (auto _item = findUpLevelItem(upLevel, upTileX, upTileY))
 				{
 					QPoint pos;	//这张瓦片原来的坐标
-					TileSystem::TileXYToPixelXY(upTileX, (1 << upLevel) - 1 - upTileY, pos.rx(), pos.ry());
+					if (yOrtginal == 2)
+					{
+						TileSystem::TileXYToPixelXY(upTileX, (1 << upLevel) - 1 - upTileY, pos.rx(), pos.ry());
+					}
+					else if (yOrtginal == 1)
+					{
+						TileSystem::TileXYToPixelXY(upTileX, upTileY, pos.rx(), pos.ry());
+					}
 
 					int _scale = 1 << (gisLevel - upLevel);
 

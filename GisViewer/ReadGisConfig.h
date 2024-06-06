@@ -23,6 +23,10 @@ public:
 	//获取地图最小等级
 	unsigned getGisMinLevel();
 
+	const std::string & getTileFormat() const;
+
+	int getTileYOriginal() const;
+
 	//获取地图瓦片路径
 	const std::string & getTilePath();
 

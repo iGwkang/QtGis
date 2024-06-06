@@ -29,8 +29,9 @@ class LoadTileThread : public QThread
 	// 瓦片数据类型
 	enum TileType
 	{
-		JPEG,
-		MBTILES
+		IMAGE,
+		MBTILES,
+		NETWORK,
 	};
 
 public:
@@ -89,5 +90,5 @@ private:
 	std::unordered_map<std::string, QImage> loadedImage;
 
 	TileType tileType;		// 瓦片数据类型
-	std::string mTilePath;	// 瓦片路径
+	QString mTilePath;	// 瓦片路径
 };
